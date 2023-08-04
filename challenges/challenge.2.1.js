@@ -21,15 +21,15 @@ import { Job, Candidate, Skill } from '../common/model.js';
 const filterByDate = (jobs, startDate, endDate) => {
   // ----- Challenge 2.1.1 - Complete the function here ---- //
 
-    // Convert the start and end date strings to Date objects
+ 
     const startDateTime = new Date(startDate);
     const endDateTime = new Date(endDate);
 
     const filteredJobs = jobs.filter(job => {
-      // Convert the job's start date string to a Date object
+ 
       const jobStartDate = new Date(job.startDate);
       
-      // Check if the job's start date is within the range of the given start and end dates
+  
       return jobStartDate >= startDateTime && jobStartDate <= endDateTime;
     });
   
@@ -72,11 +72,11 @@ const orderBySkills = (candidateList) => {
 
   const sortedCandidate = candidateList.sort((a, b) => {
     if(a.skills.length > b.skills.length){
-      return -1; // if a > b, a comes before b
+      return -1; 
     } else if(a.skills.length < b.skills.length){
-      return 1; // if a < b, a comes after b
+      return 1; 
     }else
-    return 0; // a = b, their original order is intact.
+    return 0; 
   })
 
   return sortedCandidate;
@@ -93,24 +93,21 @@ const orderBySkills = (candidateList) => {
 const orderByWeightedSkills = (candidateList) => {
   // ----- Challenge 2.1.4 - Complete the function here ---- //
 
-  const skillslevel = 0;
-
-  candidateList.forEach ((candidate) => {
-    if(candidate.skills.level === 'Expert'){
-      candidate.skills.level = 10;
-    }else if(candidate.skills.level === 'Advanced'){
-      candidate.skills.level = 5;
-    }else if(candidate.skills.level === 'Beginner'){
-      candidate.skills.level = 1;
+  const sortByWeightedSkill = candidateList.sort((a, b) => {
+    if(candidateList.skills.length === 'Expert'){
+      candidateList.skills.level = 10;
+    }else if(candidateList.skills.level === 'Advanced'){
+      candidateList.skills.level = 5;
+    }else if(candidateList.skills.level === 'Beginner'){
+      candidateList.skills.level = 1;
     }
-  });
- const sortByWeightedSkill = candidateList.sort((a, b) => {
-  if(a.candidateList.skills.level > b.candidateList.skills.level){
-    return -1; // if a > b, a comes before b
-  } else if(a.skillslevel < b.skillslevel){
-    return 1; // if a < b, a comes after b
+   
+  if(a.sum(candidateList.skills.level) > b.sum(candidateList.skills.level)){
+    return -1; 
+  } else if(a.candidateList.skills.level < b.candidateList.skills.level){
+    return 1; 
   }else
-  return 0; // a = b, their original order is intact.
+  return 0; 
 })
 
 
