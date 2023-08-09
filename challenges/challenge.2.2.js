@@ -30,23 +30,16 @@ import { Candidate } from '../common/model.js';
  */
 const normalizedName = (name) => {
   // ----- Challenge 2.2.1 - Complete the function here ---- //
-
-    
-  
-  const firstChar = name.charAt(0).toUpperCase();
-  const restOfName = name.slice(1).replace(/[aeiouAEIOU0-9\W_' ']/g, '');;
-  
-  //const fullName = firstChar + restOfName.toUpperCase();
-  
-  let doubleLetter = '';
+  const normalized = [];
+  const firstChar = name.slice(0, 1).toUpperCase();
+  const restOfName = name.slice(1).toUpperCase().replace(/[AEIOU0-9\W_' ']/g, '');;
   for (let char of restOfName) {
-    if (doubleLetter.indexOf(char) === -1) {
-      doubleLetter += char;
+    if (normalized[normalized.length - 1] !== char) {
+      normalized.push(char);
     }
   }
-  name = firstChar + doubleLetter.toUpperCase();
-     
-     return name;
+  name = firstChar + normalized.join('');     
+  return name;
 };
 
 /**
@@ -60,13 +53,10 @@ const normalizedName = (name) => {
  */
 const areSimilarCandidates = (candidate1, candidate2) => {
   // ----- Challenge 2.2.2 - Complete the function here ---- //
-
   const candidate1NormalizedName = normalizedName(candidate1.name);
-  const candidate2NormalizedName = normalizedName(candidate2.name);
-  //const datedifference = maths.abs(candidate1.dateOfBirth-candidate2.dateOfBirth);
-  const datedifference = Math.abs(candidate1.dateOfBirth - candidate2.dateOfBirth)/(1000 * 3600 * 24);
-  
-  if(-10 <= datedifference && datedifference <= 10 ){
+  const candidate2NormalizedName = normalizedName(candidate2.name);  
+  const datedifference = Math.abs(candidate1.dateOfBirth - candidate2.dateOfBirth)/(1000 * 3600 * 24);  
+  if(datedifference <= 10 ){
   if(candidate1NormalizedName === candidate2NormalizedName){
     return true;
   }else
@@ -83,15 +73,9 @@ const areSimilarCandidates = (candidate1, candidate2) => {
  */
 const possibleDuplicates = (newCandidate, candidateList) => {
   // ------ Challenge 2.2.3 - Complete the function here ---- //
-
-  for (const possibleDuplicate of candidateList) {
-
-    if(areSimilarCandidates(newCandidate, possibleDuplicate) === true){
-      return possibleDuplicate;
-    }    
-  }
-
-  return [];
+  return candidateList.filter((candidate) =>
+  areSimilarCandidates(candidate, newCandidate)
+);
 };
 
 /**
@@ -126,20 +110,22 @@ const candidateIndex = (candidateList) => {
  */
 const duplicateCount = (candidateList) => {
   // ------ Challenge 2.2.5 - Complete the function here ---- //
-
-  const count = 0;
-
-  const candidateListCopy = new Set(candidateList);
-
-  for (let candidate1 of candidateListCopy) {
-    for(let i = 0; i < candidateList.length; i++){
-
-    if(areSimilarCandidates(candidateList[i], candidate1) === true){
-     count++; 
-    }     
+const sortedcandidateList = candidateList.sort(compareByNormalizedName);
+  let count = 0;
+  for (let i = 0; i < sortedcandidateList.length - 1; i++) {
+    if (
+      areSimilarCandidates(sortedcandidateList[i], sortedcandidateList[i + 1])
+    ){
+      count++;
+    }
   }
-}
   return count;
 };
+const compareByNormalizedName = (a, b) => {
+  const name1 = normalizedName(a.name);
+  const name2 = normalizedName(b.name);
+  return name1 > name2 ? 1 : name1 < name2 ? -1 : 0;
+};
+
 
 export { normalizedName, areSimilarCandidates, possibleDuplicates, duplicateCount, candidateIndex };
