@@ -100,7 +100,6 @@ const orderByWeightedSkills = (candidateList) => {
  * @returns a floating point number indicating the ratio
  */
 const genderRatio = (candidateList) => {
-
   // ----- Challenge 2.1.5 - Complete the function here ---- //
   let femaleNumber = 0;
   let maleNumber = 0;
@@ -123,15 +122,14 @@ const genderRatio = (candidateList) => {
  */
 const busiestMonth = (jobs) => {
   // ----- Challenge 2.1.6 - Complete the function here ---- //
-
-  let busyMonth = 1;
+  const monthNumber = new Array(12).fill(0);
   for (const job of jobs) {
-      if(job.startDate.getMonth()){
-        busyMonth++;
-      }
+    const monthIndex = new Date(job.startDate).getMonth();
+    monthNumber[monthIndex]++;
   }
-
-  return 0;
+  const maxMonth = Math.max(...monthNumber);
+  const busyMonth = monthNumber.indexOf(maxMonth);
+  return busyMonth;
 };
 
 /**
@@ -141,9 +139,25 @@ const busiestMonth = (jobs) => {
  * @param {Array<Job>} jobs
  */
 const mostInDemandSkill = (jobs) => {
-
   // ----- Challenge 2.1.7 - Complete the function here ---- //
-
+  const skillsCount = {};
+  for (const job of jobs) {
+    for (const skill of job.requiredSkills) {
+      const { name } = skill;
+      skillsCount[name] = (skillsCount[name] || 0) + 1;
+    }
+  }
+  const skills = Object.keys(skillsCount); // s1, s2, s3, s4
+  const mostInDemandCount = skills.reduce((maxSkill, skill) => {
+    if (skillsCount[skill] > skillsCount[maxSkill]) {
+      return skill;
+    }
+    return maxSkill;
+  }, skills[0]);
+  const mostInDemand = skills.filter(
+    (skill) => skillsCount[skill] === skillsCount[mostInDemandCount]
+  );
+  return mostInDemand.sort();
 };
 
 export { filterByDate, filterByBornAfter, orderBySkills, orderByWeightedSkills, genderRatio, busiestMonth, mostInDemandSkill };
