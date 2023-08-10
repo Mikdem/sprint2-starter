@@ -95,7 +95,12 @@ const possibleDuplicates = (newCandidate, candidateList) => {
  */
 const candidateIndex = (candidateList) => {
   // ------ Challenge 2.2.4 - Complete the function here ---- //
-  return 0;
+  const index = {};
+  for (const candidate of candidateList) {
+    const normalizeName = normalizedName(candidate.name);
+    (index[normalizeName] ??= []).push(candidate);
+  }
+  return index;
 };
 
 /**
