@@ -18,16 +18,24 @@ test('Sort by Weighted Skills', () => {
 
 test('Sort by Weighted Skills', () => {
   expect(
-    Utils.orderByWeightedSkills([c1, c2, c3]))
+    Utils.orderByWeightedSkills([c4, c2, c3]))
     .toEqual(
-      [c1, c3, c2]
+      [c2, c3, c4]
     );
 });
 
 test('Sort by Weighted Skills', () => {
   expect(
-    Utils.orderByWeightedSkills([c5, c2]))
+    Utils.orderByWeightedSkills([c3, c4, c5]))
     .toEqual(
-      [c5, c2]
+      [c5, c3, c4]
+    );
+});
+
+test('Sort by Weighted Skills', () => {
+  expect(
+    Utils.orderByWeightedSkills([c2, c3]))
+    .toEqual(
+      [c2, c3]
     );
 });
