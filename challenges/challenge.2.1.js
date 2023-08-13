@@ -53,15 +53,7 @@ const filterByBornAfter = (candidates, date) => {
  */
 const orderBySkills = (candidateList) => {
   // ----- Challenge 2.1.3 - Complete the function here ---- //
-  const sortedCandidate = candidateList.sort((a, b) => {
-    if(a.skills.length > b.skills.length){
-      return -1; // if a > b, a comes before b
-    } else if(a.skills.length < b.skills.length){
-      return 1; // if a < b, a comes after b
-    }else
-      return 0; // a = b, their original order is intact.
-  })
-  return sortedCandidate;
+  return candidateList.sort((a, b) => b.skills.length - a.skills.length);
 };
 
 /**
@@ -102,15 +94,12 @@ const orderByWeightedSkills = (candidateList) => {
 const genderRatio = (candidateList) => {
   // ----- Challenge 2.1.5 - Complete the function here ---- //
   let femaleNumber = 0;
-  let maleNumber = 0;
   for (const candidate of candidateList) {
     if (candidate.gender === 'F') {
       femaleNumber++;
-    } else if (candidate.gender === 'M') {
-      maleNumber++;
     }
   }
-  const ratio = femaleNumber / maleNumber;
+  const ratio = femaleNumber / (candidateList.length - femaleNumber);
   return ratio;
 };
 
