@@ -20,22 +20,11 @@ import { Job, Candidate, Skill } from '../common/model.js';
  */
 const filterByDate = (jobs, startDate, endDate) => {
   // ----- Challenge 2.1.1 - Complete the function here ---- //
-
- 
-    const startDateTime = new Date(startDate);
-    const endDateTime = new Date(endDate);
-
-    const filteredJobs = jobs.filter(job => {
- 
-      const jobStartDate = new Date(job.startDate);
-      
-  
-      return jobStartDate >= startDateTime && jobStartDate <= endDateTime;
-    });
-  
-    return filteredJobs;
-
-  
+    const filteredJobs = jobs.filter(job => {  
+      const jobStartDate = new Date(job.startDate);   
+      return jobStartDate >= startDate && jobStartDate <= endDate;
+    });  
+    return filteredJobs;  
 };
 
 /**
@@ -47,17 +36,12 @@ const filterByDate = (jobs, startDate, endDate) => {
  */
 const filterByBornAfter = (candidates, date) => {
   // ----- Challenge 2.1.2 - Complete the function here ---- //
-  
- const filterByBornday = candidates.filter(newCandidate =>{ 
-  
-  const dateOfBirth = new Date(newCandidate.dateOfBirth);
-
-  return date<= dateOfBirth;
+  const filterByBornday = candidates.filter(newCandidate =>{ 
+    const dateOfBirth = new Date(newCandidate.dateOfBirth);
+    return date<= dateOfBirth;
  }
  )
-
  return filterByBornday;
-
 };
 
 /**
@@ -69,16 +53,14 @@ const filterByBornAfter = (candidates, date) => {
  */
 const orderBySkills = (candidateList) => {
   // ----- Challenge 2.1.3 - Complete the function here ---- //
-
   const sortedCandidate = candidateList.sort((a, b) => {
     if(a.skills.length > b.skills.length){
-      return -1; 
+      return -1; // if a > b, a comes before b
     } else if(a.skills.length < b.skills.length){
-      return 1; 
+      return 1; // if a < b, a comes after b
     }else
-    return 0; 
+      return 0; // a = b, their original order is intact.
   })
-
   return sortedCandidate;
 };
 
@@ -92,27 +74,25 @@ const orderBySkills = (candidateList) => {
  */
 const orderByWeightedSkills = (candidateList) => {
   // ----- Challenge 2.1.4 - Complete the function here ---- //
-
-  const sortByWeightedSkill = candidateList.sort((a, b) => {
-    if(candidateList.skills.length === 'Expert'){
-      candidateList.skills.level = 10;
-    }else if(candidateList.skills.level === 'Advanced'){
-      candidateList.skills.level = 5;
-    }else if(candidateList.skills.level === 'Beginner'){
-      candidateList.skills.level = 1;
+  for (const candidate of candidateList) {
+    for (const skill of candidate.skills) {
+      if (skill.level === 0) {
+        skill.level = 1;
+      } else if (skill.level === 1) {
+        skill.level = 5;
+      } else if (skill.level === 2) {
+        skill.level = 10;
+      }
     }
-   
-  if(a.sum(candidateList.skills.level) > b.sum(candidateList.skills.level)){
-    return -1; 
-  } else if(a.candidateList.skills.level < b.candidateList.skills.level){
-    return 1; 
-  }else
-  return 0; 
-})
-
-
+  }
+  const sortByWeightedSkill =  candidateList.sort((a, b) => {
+    const sumOfSkillA = a.skills.reduce((sum, skill) => sum + skill.level, 0);
+    const sumOfSkillB = b.skills.reduce((sum, skill) => sum + skill.level, 0);
+    return sumOfSkillB - sumOfSkillA;
+  });
   return sortByWeightedSkill;
 };
+
 
 /**
  * Return the ratio of female/male candidates in the list
@@ -120,12 +100,9 @@ const orderByWeightedSkills = (candidateList) => {
  * @returns a floating point number indicating the ratio
  */
 const genderRatio = (candidateList) => {
-
   // ----- Challenge 2.1.5 - Complete the function here ---- //
-
   let femaleNumber = 0;
   let maleNumber = 0;
-
   for (const candidate of candidateList) {
     if (candidate.gender === 'F') {
       femaleNumber++;
@@ -133,10 +110,8 @@ const genderRatio = (candidateList) => {
       maleNumber++;
     }
   }
-
   const ratio = femaleNumber / maleNumber;
   return ratio;
-
 };
 
 /**
@@ -147,15 +122,14 @@ const genderRatio = (candidateList) => {
  */
 const busiestMonth = (jobs) => {
   // ----- Challenge 2.1.6 - Complete the function here ---- //
-
-  let busyMonth = 1;
+  const monthNumber = new Array(12).fill(0);
   for (const job of jobs) {
-      if(job.startDate.getMonth()){
-        busyMonth++;
-      }
+    const monthIndex = new Date(job.startDate).getMonth();
+    monthNumber[monthIndex]++;
   }
-
-  return 0;
+  const maxMonth = Math.max(...monthNumber);
+  const busyMonth = monthNumber.indexOf(maxMonth);
+  return busyMonth;
 };
 
 /**
@@ -165,9 +139,25 @@ const busiestMonth = (jobs) => {
  * @param {Array<Job>} jobs
  */
 const mostInDemandSkill = (jobs) => {
-
   // ----- Challenge 2.1.7 - Complete the function here ---- //
-
+  const skillsCount = {};
+  for (const job of jobs) {
+    for (const skill of job.requiredSkills) {
+      const { name } = skill;
+      skillsCount[name] = (skillsCount[name] || 0) + 1;
+    }
+  }
+  const skills = Object.keys(skillsCount); // s1, s2, s3, s4
+  const mostInDemandCount = skills.reduce((maxSkill, skill) => {
+    if (skillsCount[skill] > skillsCount[maxSkill]) {
+      return skill;
+    }
+    return maxSkill;
+  }, skills[0]);
+  const mostInDemand = skills.filter(
+    (skill) => skillsCount[skill] === skillsCount[mostInDemandCount]
+  );
+  return mostInDemand.sort();
 };
 
 export { filterByDate, filterByBornAfter, orderBySkills, orderByWeightedSkills, genderRatio, busiestMonth, mostInDemandSkill };
