@@ -19,12 +19,10 @@ import { Candidate, Job } from '../common/model.js';
  */
 const skillsMatch = (candidateSkill, jobSkill) => {
   // ----- Challenge 2.3.1 - Complete the function here ---- //
-
   if(candidateSkill.name.toUpperCase() === jobSkill.name.toUpperCase() && candidateSkill.level >= jobSkill.level){
     return true;
   }else
-
-  return false;
+    return false;
 };
 
 /**
@@ -37,7 +35,6 @@ const skillsMatch = (candidateSkill, jobSkill) => {
  */
 const suitableGender = (candidate, job) => {
   // ----- Challenge 2.3.2 - Complete the function here ---- //
-
   if (candidate.gender === job.requiredGender || job.requiredGender == undefined){
     return true;
   }else
@@ -58,16 +55,13 @@ const suitableGender = (candidate, job) => {
  */
 const suitabilityScore = (candidate, job) => {
   // ----- Challenge 2.3.3 - Complete the function here ---- //
-
   let genderScore = 0;
   let skillScore = 0;
   let numberOfSkill = 0;
   let score = 0;
-
   if(suitableGender(candidate, job) === true){
     genderScore +=20;
   }
-
   for(let i=0; i<job.requiredSkills.length; i++){
     for(let j=0; j<candidate.skills.length; j++){
       if(skillsMatch(candidate.skills[j], job.requiredSkills[i]) === true){
@@ -75,11 +69,8 @@ const suitabilityScore = (candidate, job) => {
       }
     };
   };
-
   skillScore = Math.round(numberOfSkill/job.requiredSkills.length*80);
-
   score = genderScore + skillScore;
-
   return score;
 };
 
@@ -95,21 +86,19 @@ const suitabilityScore = (candidate, job) => {
  */
 const hottestCandidate = (candidates, jobs) => {
   // ----- Challenge 2.3.4 - Complete the function here ---- //
-
-  let hotness = 0;
-
-  for(let i=0; i<jobs.length; i++){
-    for(let j=0; j<candidates.length; j++){
-      const hot = suitabilityScore(candidates[j], jobs[i]);
-      if(hot > 80){
-        hotness++;
+  const hotCandidate = []  
+  for (const candidate of candidates) {
+    let hotness = 0;
+    for (const job of jobs) {
+      const hot = suitabilityScore(candidate, job);      
+        if(hot > 80){   
+          hotness++   
+       }
       }
-    };
-  };
-
-
-
-  return hotness;
+      hotCandidate.push(hotness)
+    }
+  const hottest = Math.max(...hotCandidate);
+  return hottest;
 };
 
 export { skillsMatch, suitableGender, suitabilityScore, hottestCandidate };
